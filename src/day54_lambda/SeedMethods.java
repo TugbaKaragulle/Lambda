@@ -35,4 +35,9 @@ public class SeedMethods {
         return (int) Math.pow(number,2);
     }
 
+    public static int maxBul(int number1,int number2){
+        // return Integer.max(number1,number2);
+        return number1 > number2 ? number1 : number2;
+    }
+
 }

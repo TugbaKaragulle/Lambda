@@ -45,7 +45,9 @@ public class C04_Reduce {
 
     private static void ciftSayilarinEnBuyugunuYazdir(List<Integer> sayiList) {
 
-          /*  Integer maximum =
+            //Burasi list bos oldugunda exception atar
+
+            Integer maximum =
             sayiList.stream().
                     filter(SeedMethods::ciftMi).
                     map(SeedMethods::karesiniAl).
@@ -54,10 +56,11 @@ public class C04_Reduce {
 
                       System.out.println("Cift sayilarin karesinin en büyügü = "+ maximum);
 
-           */
 
-          //Optional listenin bos cikmasina karsi bir güvence sagliyor. Kontrol etmek daha kolay. Yazdirirken get() methodunu kullanirsak daha güzel cikti aliriz
-       /* Optional<Integer> opt =
+       /*
+       //Optional listenin bos cikmasina karsi bir güvence sagliyor. Kontrol etmek daha kolay. Yazdirirken get() methodunu kullanirsak daha güzel cikti aliriz
+
+       Optional<Integer> opt =
                 sayiList.stream().
                         filter(SeedMethods::ciftMi).
                         map(SeedMethods::karesiniAl).
@@ -70,10 +73,32 @@ public class C04_Reduce {
         */
 
         //Diger alternatif
+        /*
 
-        sayiList.stream().
-                filter(SeedMethods::ciftMi).
-                map(SeedMethods::karesiniAl).reduce(sayiList.get(0), (u,t)->u>t? u:t);
+         Integer maximum =
+        sayiList
+                .stream()
+                .filter(SeedMethods::ciftMi)
+                .map(SeedMethods::karesiniAl)
+                .reduce(sayiList.get(0),SeedMethods::maxBul);
+        System.out.println("Çift sayıların karesinin en büyüğü = " + maximum);
+         */
+
+
+        /*
+
+         //orElse methodu da var. //Eger list bossa 0 döndürecek. exception atmaz böylece
+
+        Integer maximum =
+                sayiList.stream().
+                        filter(SeedMethods::ciftMi).
+                        map(SeedMethods::karesiniAl).
+                        //reduce(Math::max).get();          //alternatif 2
+                                reduce((t,u)-> t>u ? t:u).orElse(0);
+
+        System.out.println("Cift sayilarin karesinin en büyügü = "+ maximum);
+
+         */
 
 
 
