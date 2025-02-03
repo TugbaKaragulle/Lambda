@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 public class C04_Reduce {
 
@@ -25,23 +26,93 @@ public class C04_Reduce {
 
             //Task01-> list çift elemanlarının karelerinin en buyugunu print code create ediniz...
 
-            ciftSayilarinEnBuyugunuYazdir(sayiList);
+          //  ciftSayilarinEnBuyugunuYazdir(sayiList);
 
 
             System.out.println("\n****Task02****");
             //Task02-> list elemanlarının toplamını  print code create ediniz...
 
+            listElemenalarininToplami(sayiList);
+
             System.out.println("\n****Task03****");
             //Task03-> list'in çift elemanlarının çarpımını  print code create ediniz...
 
+            ciftElemanlarinCarpimi(sayiList);
+
             System.out.println("\n****Task04****");
             //Task04-> list elemanlarının en küçüğünü  print code 4 farklı code create ediniz...
+            listElemanlarininEnKucugu(sayiList);
 
             System.out.println("\n****Task05****");
             // Task05-> List elemanlarının 25'den buyuk en kucuk tek elemanını print eden code create ediniz...
 
+            task05(sayiList);
+
+
 
         }
+
+    private static void task05(List<Integer> sayiList) {
+
+        System.out.println(sayiList
+                .stream()
+               // .filter(Predicate.not(SeedMethods::ciftMi))
+                .filter(t -> t > 25 && t % 2 == 1)
+                .reduce(Integer.MAX_VALUE, SeedMethods::minBul));
+    }
+
+    private static void listElemanlarininEnKucugu(List<Integer> sayiList) {
+
+            //1. yol
+
+        System.out.println(sayiList
+                .stream()
+                .reduce((u, t) -> u < t ? u : t)
+                .orElse(-1)); //bos stream'de calisirsa min bulamayip -1 döndürecek.
+
+        //2. yol
+
+        System.out.println(sayiList
+                .stream()
+                .reduce(Math::min)//min sayiyi bulan Math metodu
+                .get());
+
+        //3. Yol
+
+        System.out.println(sayiList
+                .stream()
+                .reduce(sayiList.get(0), Math::min));
+
+        //4. yol
+
+        System.out.println(sayiList
+                .stream()
+                .reduce(Integer.MAX_VALUE, Integer::min));
+    }
+
+    private static void ciftElemanlarinCarpimi(List<Integer> sayiList) {
+
+            sayiList
+                    .stream()
+                    .filter(SeedMethods::ciftMi)
+                    .reduce(1,Math::multiplyExact);
+    }
+
+    private static void listElemenalarininToplami( List<Integer>sayiList) {
+
+            Integer sum = sayiList
+                    .stream()
+                    .reduce(0,Math::addExact);
+        System.out.println("List elemanlarinin toplami ="+sum);
+
+        Optional<Integer>sum2= sayiList
+                .stream()
+                .reduce(Math::addExact);
+        System.out.println("List elemanlarinin toplami ="+sum2);
+        System.out.println("sum2.orElse(0) = " + sum2.orElse(0));
+
+
+    }
 
     private static void ciftSayilarinEnBuyugunuYazdir(List<Integer> sayiList) {
 
@@ -54,7 +125,7 @@ public class C04_Reduce {
                     //reduce(Math::max).get();          //alternatif 2
                     reduce((t,u)-> t>u ? t:u).get(); //alternatif 3
 
-                      System.out.println("Cift sayilarin karesinin en büyügü = "+ maximum);
+        System.out.println("Cift sayilarin karesinin en büyügü = "+ maximum);
 
 
        /*
