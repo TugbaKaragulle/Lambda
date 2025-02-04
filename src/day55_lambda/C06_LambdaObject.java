@@ -43,6 +43,13 @@ public class C06_LambdaObject {
         System.out.println("\n****Task 03*****");
         //task03->universite'lerde herhangi birinde "matematik" bolumu olup olmadigini  kontrol eden code create ediniz.
 
+        boolean mathBolumuVarmi =
+                unv
+                        .stream()
+                                .anyMatch(t->t.getBolum().equalsIgnoreCase("Matematik"));
+
+        System.out.println("mathBolumuVarmi = " + mathBolumuVarmi);
+
         System.out.println("\n****Task 04*****");
         //task04->universite'leri ogr sayilarina gore b->k siralayiniz.
 
@@ -53,6 +60,11 @@ public class C06_LambdaObject {
                                 .toList();
 
         System.out.println("ogrenciSayisinaGöreSiraliUnivList = " + ogrenciSayisinaGöreSiraliUnivList);
+        //ogrenciSayisinaGöreSiraliUnivList = [universite='Marmara', bolum='Hukuk', ogrSayisi=1453, notOrt=52.0,
+        // universite='Istanbul', bolum='Matematik', ogrSayisi=622, notOrt=77.0,
+        // universite='Bogazici', bolum='Matematik', ogrSayisi=571, notOrt=73.0,
+        // universite='Itu', bolum='uçak muh.', ogrSayisi=333, notOrt=63.0,
+        // universite='Yıldız Teknik', bolum='Gemi ', ogrSayisi=216, notOrt=55.0]
 
 
         System.out.println("\n****Task 05*****");
@@ -63,6 +75,9 @@ public class C06_LambdaObject {
                         .sorted(Comparator.comparing(C06_University::getNotOrt).reversed())
                                 .limit(3)
                                         .forEach(SeedMethods::yazdir);
+        //universite='Istanbul', bolum='Matematik', ogrSayisi=622, notOrt=77.0
+        // universite='Bogazici', bolum='Matematik', ogrSayisi=571, notOrt=73.0
+        // universite='Itu', bolum='uçak muh.', ogrSayisi=333, notOrt=63.0
 
         System.out.println("\n****Task 06*****");
         //task06-> ogrc sayisi en az olan 2. universite'yi  print eden code create ediniz...
@@ -72,25 +87,91 @@ public class C06_LambdaObject {
                 .sorted(Comparator.comparing(C06_University::getOgrSayisi))
                 .skip(1)
                 .findFirst()
-                .get());
+                .get()); //universite='Itu', bolum='uçak muh.', ogrSayisi=333, notOrt=63.0
 
         System.out.println("\n****Task 07*****");
         //task07-> notOrt 63 'den buyuk olan universite'lerin ogrc sayilarini toplamini print eden code create ediniz...
 
+      int sum =  unv
+                .stream()
+                .filter(t -> t.getNotOrt() > 63)
+                .map(t->t.getOgrSayisi()) // Böyle de yazabilirdik:----> .map(C06University::getOgrSayisi)
+                        .reduce(0,(t,u)->t+u); //Böyle de yazabilirdik:----> .reduce(0, Math::addExact));
+
+        System.out.println("sum = " + sum); //sum = 1193
+
+        //2. Yol:
+
+        System.out.println(unv
+                .stream()
+                .filter(t -> t.getNotOrt() > 63)
+                .mapToDouble(C06_University::getOgrSayisi)//Toplama, ya da ortalama bulmak icin kullaniriz bunu
+                .sum()); //1193.0
+
         System.out.println("\n****Task 08*****");
-        //task08-> Ogrenci sayisi 333'dan buyuk olan universite'lerin notOrt'larinin ortalamasini print eden code create ediniz...
+        //task08-> Ogrenci sayisi 333'ten buyuk olan universite'lerin notOrtalamalarinin ortalamasini print eden code create ediniz...
+
+        System.out.println(unv
+                .stream()
+                .filter(t -> t.getOgrSayisi() > 333)
+                .mapToDouble(C06_University::getNotOrt)
+                .average()
+                .getAsDouble());//67.33333333333333 //alternatif yazdirma ---> .orElse(0.0) // Eger yoksa 0.0(double) yazdiracak //isPresent da var.
+
+
+
+
 
         System.out.println("\n****Task 09*****");
         //task09-> "matematik" bolumlerinin sayisini  print eden code create ediniz...
 
+        System.out.println(unv
+                .stream()
+                .filter(t -> t.getBolum().equalsIgnoreCase("matematik"))
+                .count()); //2
+
+
         System.out.println("\n****Task 10*****");
         //task10-> Ogrenci sayilari 571'dan fazla olan universite'lerin en buyuk notOrt'unu print eden code create ediniz...
+
+        System.out.println(unv
+                .stream()
+                .filter(t -> t.getOgrSayisi() > 571)
+                .sorted(Comparator.comparing(C06_University::getNotOrt).reversed())
+                .mapToDouble(C06_University::getNotOrt)
+                .max()
+                .getAsDouble());  //77.0
+
+        //2.Yol:
+
+        unv
+                .stream()
+                .filter(t -> t.getOgrSayisi() > 571)
+                .sorted(Comparator.comparing(C06_University::getNotOrt).reversed())
+                        .map(C06_University::getNotOrt)
+                                .limit(1)
+                                        .forEach(SeedMethods::yazdir); //77.0
+
+
 
         System.out.println("\n****Task 11*****");
         //task11-> Ogrenci sayilari 1071'dan az olan universite'lerin en kucuk notOrt'unu print eden code create ediniz...
 
+        System.out.println(unv
+                .stream()
+                .filter(t -> t.getOgrSayisi() < 1071)
+                .mapToDouble(C06_University::getNotOrt)
+                .min().getAsDouble()); //55.0
 
+        //2.Yol::
 
+        unv
+                .stream()
+                .filter(t -> t.getOgrSayisi() < 1071)
+                .sorted(Comparator.comparing(C06_University::getNotOrt))
+                .map(C06_University::getNotOrt)
+                .limit(1)
+                .forEach(System.out::println); //55.0
 
     }
 }
